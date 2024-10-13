@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fill in the Blank for {{ quiz.title }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Koristite CDN -->
+    <style>
+        body {
+            background-color: #d4edda; /* Zelena pozadina */
+            color: #212529; /* Crna slova */
+            font-family: Arial, sans-serif; /* Moderni font */
+        }
+        .container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">{{ quiz.title }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {% for task in tasks %}
+                <div class="form-group task">
+                    <label>{{ task.get_sentence_with_blank }}</label> <!-- Promijenjeno -->
+                    <input type="text" class="form-control" name="user_answers" placeholder="Type your answer">
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

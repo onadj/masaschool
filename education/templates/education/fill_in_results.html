@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Koristite CDN -->
+    <style>
+        body {
+            background-color: #d4edda; /* Zelena pozadina */
+            color: #212529; /* Crna slova */
+            font-family: Arial, sans-serif; /* Moderni font */
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .result {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .correct {
+            background-color: #c3e6cb; /* Svijetlozelena za točno */
+        }
+        .incorrect {
+            background-color: #f5c6cb; /* Svijetloružičasta za netočno */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Results</h2>
+        {% for result in results %}
+            <div class="result {{ 'correct' if result.is_correct else 'incorrect' }}">
+                <p><strong>Task:</strong> {{ result.task.sentence }}</p>
+                <p><strong>Your Answer:</strong> {{ result.user_answer }}</p>
+                <p><strong>Correct Answer:</strong> {{ result.task.blank_word }}</p>
+                <p><strong>Status:</strong> {{ 'Correct' if result.is_correct else 'Incorrect' }}</p>
+            </div>
+        {% endfor %}
+        <a href="{% url 'task_view' quiz.id %}" class="btn btn-secondary">Back to Tasks</a>
+    </div>
+</body>
+</html>

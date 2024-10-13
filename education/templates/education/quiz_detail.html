@@ -1,0 +1,48 @@
+<!-- templates/education/quiz_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>{{ quiz.title }}</title>
+    <style>
+        body {
+            background-color: #e9f5e9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ quiz.title }}</h1>
+        <p>{{ quiz.description }}</p>
+        <p>Time limit: {{ quiz.time_limit }} seconds</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            {% for task in tasks %}
+                <div class="form-group">
+                    <label>{{ task.prompt }}</label>
+                    <input type="text" name="user_answers" class="form-control" required>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <script>
+            const timeLimit = {{ quiz.time_limit }};
+            let timer = timeLimit;
+
+            const countdown = setInterval(() => {
+                timer--;
+                if (timer <= 0) {
+                    clearInterval(countdown);
+                    document.forms[0].submit();  // Automatski pošalji formu kad istekne vrijeme
+                }
+                console.log(timer); // Možeš ukloniti ili promijeniti ovo za prikaz
+            }, 1000);
+        </script>
+    </div>
+</body>
+</html>

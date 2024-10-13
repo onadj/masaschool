@@ -1,0 +1,32 @@
+<!-- templates/education/quiz_list.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Koristite CDN -->
+    <title>Available Quizzes</title>
+    <style>
+        body {
+            background-color: #e9f5e9;  /* Zelena pozadina */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Quizzes</h1>
+        {% if quizzes %}
+            <ul class="list-group">
+                {% for quiz in quizzes %}
+                    <li class="list-group-item">
+                        <a href="{% url 'fill_in_the_blank' quiz.id %}">{{ quiz.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info">No quizzes available.</div>
+        {% endif %}
+    </div>
+</body>
+</html>
