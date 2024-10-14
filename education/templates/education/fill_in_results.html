@@ -26,6 +26,12 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <p>Correct Answers: {{ correct_count }} / {{ total_tasks }}</p>
+        <p>Time Taken: {{ time_taken }} seconds</p>
+        <p>Percentage Correct: {{ accuracy_percentage }}%</p>
+
+        <a href="{% url 'quiz_list' %}" class="btn btn-primary">Back to Quizzes</a>
     </div>
 </body>
 </html>
