@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Fill in the Blank for {{ quiz.title }}</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Koristite CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #d4edda; /* Zelena pozadina */
@@ -22,8 +22,8 @@
             {% csrf_token %}
             {% for task in tasks %}
                 <div class="form-group task">
-                    <label>{{ task.get_sentence_with_blank }}</label> <!-- Promijenjeno -->
-                    <input type="text" class="form-control" name="user_answers" placeholder="Type your answer">
+                    <label>{{ task.get_sentence_with_blank }}</label>
+                    <input type="text" class="form-control" name="user_answers" placeholder="Type your answer" required>
                 </div>
             {% endfor %}
             <button type="submit" class="btn btn-primary btn-block">Submit</button>

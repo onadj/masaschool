@@ -1,48 +1,33 @@
-<!-- templates/education/quiz_detail.html -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>{{ quiz.title }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Koristite CDN -->
     <style>
         body {
-            background-color: #e9f5e9;
+            background-color: #f8f9fa; /* Svijetla pozadina */
+            color: #212529; /* Crna slova */
+            font-family: Arial, sans-serif; /* Moderni font */
+        }
+        .container {
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>{{ quiz.title }}</h1>
-        <p>{{ quiz.description }}</p>
-        <p>Time limit: {{ quiz.time_limit }} seconds</p>
-
+        <h2 class="text-center">{{ quiz.title }}</h2>
         <form method="POST">
             {% csrf_token %}
             {% for task in tasks %}
                 <div class="form-group">
-                    <label>{{ task.prompt }}</label>
-                    <input type="text" name="user_answers" class="form-control" required>
+                    <label>{{ task.question }}</label>
+                    <input type="text" class="form-control" name="user_answers" placeholder="Type your answer" required>
                 </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
         </form>
-
-        <script>
-            const timeLimit = {{ quiz.time_limit }};
-            let timer = timeLimit;
-
-            const countdown = setInterval(() => {
-                timer--;
-                if (timer <= 0) {
-                    clearInterval(countdown);
-                    document.forms[0].submit();  // Automatski pošalji formu kad istekne vrijeme
-                }
-                console.log(timer); // Možeš ukloniti ili promijeniti ovo za prikaz
-            }, 1000);
-        </script>
     </div>
 </body>
 </html>

@@ -26,9 +26,16 @@ SECRET_KEY = 'django-insecure-kp%20a0^(==z^7+n9av1*g$#+uyw&@x$jlcym10w*%&ryjg)1h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-onadj-masaschool-rl2ekz1rars.ws-eu116.gitpod.io', 'localhost']
+ALLOWED_HOSTS = [
+    '000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',
+    '8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj trenutni host ovdje
+    'localhost',
+]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://8000-onadj-masaschool-rl2ekz1rars.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj trenutni origin ovdje
+]
 
 # Application definition
 
@@ -73,8 +80,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'masaschool.wsgi.application'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://8000-onadj-masaschool-rl2ekz1rars.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',
+    'https://000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj ovaj ili bilo koji relevantan URL koji koristiš
 ]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -131,3 +140,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Authentication settings
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/education/quizzes/'
