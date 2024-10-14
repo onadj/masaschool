@@ -2,36 +2,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Results for {{ quiz.title }}</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Koristite CDN -->
-    <style>
-        body {
-            background-color: #e9f5e9; /* Zelena pozadina */
-            color: #212529; /* Crna slova */
-            font-family: Arial, sans-serif; /* Moderni font */
-        }
-        .container {
-            margin-top: 50px;
-        }
-    </style>
+    <title>Fill in Results for {{ quiz.title }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h2 class="text-center">Results for {{ quiz.title }}</h2>
-        <ul class="list-group">
-            {% for result in results %}
-                <li class="list-group-item">
-                    <strong>Question:</strong> {{ result.task.get_sentence_with_blank }}<br>
-                    <strong>Your Answer:</strong> {{ result.user_answer }}<br>
-                    {% if result.is_correct %}
-                        <span class="text-success">Correct!</span>
-                    {% else %}
-                        <span class="text-danger">Incorrect! The correct answer is {{ result.task.blank_word }}.</span>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'quiz_list' %}" class="btn btn-primary btn-block mt-4">Back to Quizzes</a>
+        <h1>Results for {{ quiz.title }}</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Your Answer</th>
+                    <th>Correct</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.task.sentence }}</td>
+                        <td>{{ result.user_answer }}</td>
+                        <td>{{ result.is_correct|yesno:"Yes,No" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

@@ -1,4 +1,3 @@
-# models.py
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -55,13 +54,14 @@ class UserProfile(models.Model):
 
 class UserTaskResult(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)  # Omogućite null ako zadatak nije standardni
+    fill_in_the_blank_task = models.ForeignKey('FillInTheBlankTask', on_delete=models.CASCADE, null=True, blank=True)  # Dodano za zadatke s prazninama
     user_answer = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user_profile.user.username} - {self.task.prompt} - {'Correct' if self.is_correct else 'Incorrect'}"
+        return f"{self.user_profile.user.username} - {self.task.prompt if self.task else self.fill_in_the_blank_task.sentence} - {'Correct' if self.is_correct else 'Incorrect'}"
 
 class FillInTheBlankTask(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)

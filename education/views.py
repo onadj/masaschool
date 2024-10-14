@@ -3,6 +3,7 @@ from .models import Quiz, UserTaskResult, Task, FillInTheBlankTask
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
+# Funkcija za prijavu
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -10,7 +11,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('quiz_list')  
+            return redirect('quiz_list')  # Preusmjeri na popis kvizova
         else:
             return render(request, 'education/login.html', {'error': 'Invalid username or password.'})
 
@@ -61,6 +62,7 @@ def quiz_detail(request, quiz_id):
             'accuracy_percentage': accuracy_percentage,
         })
 
+    # Ako nije POST zahtjev, prikazujemo detalje kviza
     return render(request, 'education/quiz_detail.html', {'quiz': quiz, 'tasks': tasks})
 
 @login_required
@@ -80,10 +82,11 @@ def fill_in_the_blank(request, quiz_id):
                 'is_correct': is_correct,
             })
 
+            # Spremanje rezultata u UserTaskResult model
             user_profile = request.user.userprofile
             UserTaskResult.objects.create(
                 user_profile=user_profile,
-                task=task,
+                fill_in_the_blank_task=task,  # Koristite fill_in_the_blank_task
                 user_answer=user_answer,
                 is_correct=is_correct,
             )
@@ -98,7 +101,7 @@ def fill_in_the_blank(request, quiz_id):
 @login_required
 def fill_in_the_blank_results(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
-    results = UserTaskResult.objects.filter(user_profile=request.user.userprofile, task__quiz=quiz)
+    results = UserTaskResult.objects.filter(user_profile=request.user.userprofile, fill_in_the_blank_task__quiz=quiz)
 
     correct_count = sum(1 for result in results if result.is_correct)
     total_tasks = results.count()
