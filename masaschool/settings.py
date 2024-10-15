@@ -26,18 +26,15 @@ SECRET_KEY = 'django-insecure-kp%20a0^(==z^7+n9av1*g$#+uyw&@x$jlcym10w*%&ryjg)1h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',
-    '8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj trenutni host ovdje
-    'localhost',
-]
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://8000-onadj-masaschool-rl2ekz1rars.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-wniucvxvkv9.ws-eu116.gitpod.io',
     'https://8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj trenutni origin ovdje
 ]
 
-# Application definition
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -53,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  # Provjerite da je ova linija prisutna
+    #'django.middleware.csrf.CsrfViewMiddleware',  # Provjerite da je ova linija prisutna
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -142,5 +139,5 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
-LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/education/quizzes/'
+LOGIN_REDIRECT_URL = '/education/'  # To će preusmjeriti na home_view
+

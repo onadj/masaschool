@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import quiz_list, quiz_detail, fill_in_the_blank
+from .views import home_view, quiz_list, quiz_detail, fill_in_the_blank
 
 urlpatterns = [
     path('quizzes/', quiz_list, name='quiz_list'),  # Popis kvizova

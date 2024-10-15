@@ -3,8 +3,19 @@ from .models import Quiz, UserTaskResult, Task, FillInTheBlankTask
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from .models import Category
 
-# Funkcija za prijavu
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Category  # Pretpostavimo da imate model Category
+
+@login_required
+def home_view(request):
+    # Uzimamo sve kategorije iz baze podataka
+    categories = Category.objects.all()
+    return render(request, 'education/home.html', {'categories': categories})
+
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -12,7 +23,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('quiz_list')  # Preusmjeri na popis kvizova
+            return redirect('home')  # Preusmjeri na home
         else:
             return render(request, 'education/login.html', {'error': 'Invalid username or password.'})
 
