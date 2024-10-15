@@ -26,14 +26,22 @@ SECRET_KEY = 'django-insecure-kp%20a0^(==z^7+n9av1*g$#+uyw&@x$jlcym10w*%&ryjg)1h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # Ova linija može biti ostavljena kao wildcard za razvoj
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-onadj-masaschool-wniucvxvkv9.ws-eu116.gitpod.io',
-    'https://8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj trenutni origin ovdje
+    'http://8000-onadj-masaschool-wniucvxvkv9.ws-eu116.gitpod.io',  # Za HTTP
+    'https://localhost:8000',  # Ako testirate lokalno
+    'http://localhost:8000',  # Ako testirate lokalno
 ]
 
 
+CORS_ALLOWED_ORIGINS = [
+    'https://8000-onadj-masaschool-wniucvxvkv9.ws-eu116.gitpod.io',
+    'http://8000-onadj-masaschool-wniucvxvkv9.ws-eu116.gitpod.io',  # Za HTTP
+    'https://localhost:8000',  # Ako testirate lokalno
+    'http://localhost:8000',  # Ako testirate lokalno
+]
 
 
 INSTALLED_APPS = [
@@ -50,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',  # Provjerite da je ova linija prisutna
+    'django.middleware.csrf.CsrfViewMiddleware',  # Provjerite da je ova linija prisutna
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -76,10 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'masaschool.wsgi.application'
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://8000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',
-    'https://000-onadj-masaschool-zrsz9f8sk78.ws-eu116.gitpod.io',  # Dodaj ovaj ili bilo koji relevantan URL koji koristiš
-]
+
 
 
 # Database
