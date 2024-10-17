@@ -28,11 +28,16 @@ def login_view(request):
             return render(request, 'education/login.html', {'error': 'Invalid username or password.'})
 
     return render(request, 'education/login.html')
-
-@login_required
+    
 def quiz_list(request):
-    quizzes = Quiz.objects.all()  # Preuzmi sve kvizove
-    return render(request, 'education/quiz_list.html', {'quizzes': quizzes})
+    category_id = request.GET.get('category')
+    category = get_object_or_404(Category, id=category_id)
+    quizzes = Quiz.objects.filter(category=category)  # Filtriranje kvizova prema kategoriji
+    context = {
+        'quizzes': quizzes,
+        'category': category
+    }
+    return render(request, 'education/quiz_list.html', context)
 
 @login_required
 def quiz_detail(request, quiz_id):

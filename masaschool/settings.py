@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']  # Ova linija može biti ostavljena kao wildcard za razvoj
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://8000-onadj-masaschool-cwp67omjwa0.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-fpas1yb6w6n.ws-eu116.gitpod.io',
     'http://8000-onadj-masaschool-cwp67omjwa0.ws-eu116.gitpod.io',  # Za HTTP
     'https://localhost:8000',  # Ako testirate lokalno
     'http://localhost:8000',  # Ako testirate lokalno
@@ -37,7 +37,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 CORS_ALLOWED_ORIGINS = [
-    'https://8000-onadj-masaschool-cwp67omjwa0.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-fpas1yb6w6n.ws-eu116.gitpod.io/',
     'http://8000-onadj-masaschool-cwp67omjwa0.ws-eu116.gitpod.io',  # Za HTTP
     'https://localhost:8000',  # Ako testirate lokalno
     'http://localhost:8000',  # Ako testirate lokalno
