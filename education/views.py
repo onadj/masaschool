@@ -28,7 +28,7 @@ def login_view(request):
             return render(request, 'education/login.html', {'error': 'Invalid username or password.'})
 
     return render(request, 'education/login.html')
-    
+
 def quiz_list(request):
     category_id = request.GET.get('category')
     category = get_object_or_404(Category, id=category_id)
@@ -157,3 +157,6 @@ def fill_in_the_blank_results(request, quiz_id):
         'total_tasks': total_tasks,
         'accuracy_percentage': accuracy_percentage,
     })
+
+def multiplication_quiz_view(request):
+    return render(request, 'education/multiplication_quiz.html')
