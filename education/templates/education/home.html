@@ -20,10 +20,20 @@
         .category-card:hover {
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
+        .logout-link {
+            text-align: right;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="logout-link">
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
         <h1 class="mt-4 mb-4">5th Grade</h1>
         <div class="row">
             {% for category in categories %}
@@ -31,7 +41,7 @@
                     <div class="category-card">
                         <h3>{{ category.name }}</h3>
                         <p>{{ category.description }}</p>
-                        <a href="{% url 'quiz_list' %}?category={{ category.id }}" class="btn btn-primary">View Quizzes</a> <!-- Ažuriraj link -->
+                        <a href="{% url 'quiz_list' %}?category={{ category.id }}" class="btn btn-primary">View Quizzes</a>
                     </div>
                 </div>
             {% endfor %}

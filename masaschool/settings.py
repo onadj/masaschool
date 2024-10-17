@@ -144,5 +144,8 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
-LOGIN_REDIRECT_URL = '/education/'  # To će preusmjeriti na home_view
+# Authentication settings
+LOGIN_REDIRECT_URL = '/education/'  # Redirects to home_view after login
+LOGOUT_REDIRECT_URL = 'login'  # Redirects to login page after logout
+
 
