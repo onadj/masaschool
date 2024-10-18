@@ -1,20 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Quiz, UserTaskResult, Task, FillInTheBlankTask
+from .models import Quiz, UserTaskResult, Task, FillInTheBlankTask, Category
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from .models import Category
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Category  # Pretpostavimo da imate model Category
 
 @login_required
 def home_view(request):
-    # Uzimamo sve kategorije iz baze podataka
     categories = Category.objects.all()
     return render(request, 'education/home.html', {'categories': categories})
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -23,16 +16,15 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')  # Preusmjeri na home
+            return redirect('home')
         else:
             return render(request, 'education/login.html', {'error': 'Invalid username or password.'})
-
     return render(request, 'education/login.html')
 
 def quiz_list(request):
     category_id = request.GET.get('category')
     category = get_object_or_404(Category, id=category_id)
-    quizzes = Quiz.objects.filter(category=category)  # Filtriranje kvizova prema kategoriji
+    quizzes = Quiz.objects.filter(category=category)
     context = {
         'quizzes': quizzes,
         'category': category
@@ -42,7 +34,7 @@ def quiz_list(request):
 @login_required
 def quiz_detail(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
-    tasks = Task.objects.filter(quiz=quiz)  # Preuzmi zadatke za taj kviz
+    tasks = Task.objects.filter(quiz=quiz)
 
     if request.method == 'POST':
         user_answers = request.POST.getlist('user_answers')
@@ -79,27 +71,24 @@ def quiz_detail(request, quiz_id):
             'accuracy_percentage': accuracy_percentage,
         })
 
-    # Ako nije POST zahtjev, prikazujemo detalje kviza
     return render(request, 'education/quiz_detail.html', {'quiz': quiz, 'tasks': tasks})
-    
+
 @login_required
 def fill_in_the_blank(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     tasks = FillInTheBlankTask.objects.filter(quiz=quiz)
 
-    # Start the timer only when the user accesses the page (GET request)
     if request.method == 'GET':
-        request.session['start_time'] = timezone.now().isoformat()  # Store the start time in the session
+        request.session['start_time'] = timezone.now().isoformat()
 
     if request.method == 'POST':
         user_answers = request.POST.getlist('user_answers')
         results = []
         correct_count = 0
 
-        # Retrieve start time from session
         start_time = timezone.datetime.fromisoformat(request.session['start_time'])
         end_time = timezone.now()
-        time_taken_seconds = (end_time - start_time).total_seconds()  # in seconds
+        time_taken_seconds = (end_time - start_time).total_seconds()
 
         for task, user_answer in zip(tasks, user_answers):
             is_correct = user_answer.strip().lower() == task.blank_word.lower()
@@ -112,7 +101,6 @@ def fill_in_the_blank(request, quiz_id):
             if is_correct:
                 correct_count += 1
 
-            # Save results in UserTaskResult model
             user_profile = request.user.userprofile
             UserTaskResult.objects.create(
                 user_profile=user_profile,
@@ -121,7 +109,6 @@ def fill_in_the_blank(request, quiz_id):
                 is_correct=is_correct,
             )
 
-        # Calculate minutes and seconds for the total time taken
         minutes = int(time_taken_seconds // 60)
         seconds = int(time_taken_seconds % 60)
         formatted_time_taken = f"{minutes} minute(s) {seconds} second(s)"
@@ -135,10 +122,9 @@ def fill_in_the_blank(request, quiz_id):
             'correct_count': correct_count,
             'total_tasks': total_tasks,
             'accuracy_percentage': accuracy_percentage,
-            'time_taken': formatted_time_taken,  # Add formatted time taken
+            'time_taken': formatted_time_taken,
         })
 
-    # For GET request, show the tasks without submitting answers
     return render(request, 'education/fill_in_the_blank.html', {'quiz': quiz, 'tasks': tasks})
 
 @login_required
@@ -157,6 +143,18 @@ def fill_in_the_blank_results(request, quiz_id):
         'total_tasks': total_tasks,
         'accuracy_percentage': accuracy_percentage,
     })
+
+def exercises(request):
+    return render(request, 'education/exercises.html')
+
+def addition_quiz(request):
+    return render(request, 'education/addition_quiz.html')
+
+def subtraction_quiz(request):
+    return render(request, 'education/subtraction_quiz.html')
+
+def division_quiz(request):
+    return render(request, 'education/division_quiz.html')
 
 def multiplication_quiz_view(request):
     return render(request, 'education/multiplication_quiz.html')

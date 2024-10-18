@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masa’s Mega Subtraction Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('images/cat.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #ff5733;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .form-label {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #007bff;
+        }
+
+        .btn {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #ff5733;
+            border-color: #ff5733;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        #feedback {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #wrongAnswersList {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        #bravoMessage {
+            font-size: 28px;
+            font-weight: bold;
+            color: green;
+        }
+
+        #taskNumber {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 10px;
+            width: fit-content;
+            margin: 0;
+        }
+    </style>
+
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card p-4">
+            <h1 class="text-center">Masa’s Mega Subtraction Quiz!</h1>
+
+            <div class="mb-3">
+                <label for="range" class="form-label">Enter the highest number to subtract:</label>
+                <input type="number" id="range" min="1" max="100" value="50" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="taskCount" class="form-label">How many tasks do you want to solve:</label>
+                <input type="number" id="taskCount" min="1" max="100" value="10" class="form-control">
+            </div>
+
+            <button id="startBtn" class="btn btn-primary w-100 mb-4">Ready? Start the quiz!</button>
+
+            <div id="quizSection" style="display: none;">
+                <p id="taskNumber" class="h5 mb-3"></p>
+                <p id="question" class="h4 text-center"></p>
+                <input type="number" id="answer" class="form-control mb-3" placeholder="Type your answer here">
+                <button id="submitBtn" class="btn btn-success w-100 mb-3">Submit</button>
+                <p id="feedback" class="text-center fw-bold"></p>
+                <p id="timer" class="text-center text-danger">Time left: <span id="timeLeft">10</span> seconds</p>
+            </div>
+
+            <div id="resultsSection" style="display: none;">
+                <h2 class="text-center">Results</h2>
+                <p class="text-center">Correct answer percentage: <span id="correctPercentage"></span>%</p>
+                <p class="text-center">Total time: <span id="totalTime"></span></p>
+                <h3 class="text-center mt-3">Wrong Answers:</h3>
+                <ul id="wrongAnswersList" class="list-group mb-3"></ul>
+                <p id="bravoMessage" class="text-center" style="display: none;">BRAVO MASA!!!!</p>
+                <button id="startOverBtn" class="btn btn-warning w-100">Start over</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+       let currentTask = 0;
+let correctAnswers = 0;
+let totalTime = 0;
+let wrongAnswers = [];
+let timer;
+
+document.getElementById('startBtn').addEventListener('click', startQuiz);
+document.getElementById('submitBtn').addEventListener('click', checkAnswer);
+document.getElementById('startOverBtn').addEventListener('click', startOver);
+
+function startQuiz() {
+    currentTask = 0;
+    correctAnswers = 0;
+    totalTime = 0;
+    wrongAnswers = [];
+    document.getElementById('quizSection').style.display = 'block';
+    document.getElementById('resultsSection').style.display = 'none';
+    document.getElementById('feedback').innerText = '';
+    document.getElementById('taskCount').disabled = true;
+    document.getElementById('range').disabled = true;
+    generateTask();
+    startTimer();
+}
+
+function generateTask() {
+    const max = parseInt(document.getElementById('range').value);
+    const num1 = Math.floor(Math.random() * (max + 1));
+    const num2 = Math.floor(Math.random() * (max + 1));
+    document.getElementById('question').innerText = `${num1} - ${num2} = ?`;
+    document.getElementById('taskNumber').innerText = `Task ${currentTask + 1}`;
+}
+
+function checkAnswer() {
+    const answer = parseInt(document.getElementById('answer').value);
+    const [num1, num2] = document.getElementById('question').innerText.split(' - ').map(x => parseInt(x));
+    if (answer === num1 - num2) {
+        correctAnswers++;
+        document.getElementById('feedback').innerText = 'Correct!';
+    } else {
+        wrongAnswers.push(`${num1} - ${num2} = ${num1 - num2}`);
+        document.getElementById('feedback').innerText = 'Wrong! The correct answer is ' + (num1 - num2);
+    }
+    currentTask++;
+    if (currentTask < parseInt(document.getElementById('taskCount').value)) {
+        generateTask();
+    } else {
+        endQuiz();
+    }
+}
+
+function startTimer() {
+    let timeLeft = 10;
+    document.getElementById('timeLeft').innerText = timeLeft;
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timeLeft').innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            checkAnswer();
+        }
+    }, 1000);
+}
+
+function endQuiz() {
+    clearInterval(timer);
+    totalTime = 10 * currentTask;
+    document.getElementById('correctPercentage').innerText = ((correctAnswers / currentTask) * 100).toFixed(2);
+    document.getElementById('totalTime').innerText = `${totalTime} seconds`;
+    document.getElementById('wrongAnswersList').innerHTML = wrongAnswers.map(answer => `<li>${answer}</li>`).join('');
+    document.getElementById('bravoMessage').style.display = (correctAnswers === currentTask) ? 'block' : 'none';
+    document.getElementById('quizSection').style.display = 'none';
+    document.getElementById('resultsSection').style.display = 'block';
+}
+
+function startOver() {
+    document.getElementById('taskCount').disabled = false;
+    document.getElementById('range').disabled = false;
+    document.getElementById('answer').value = '';
+    document.getElementById('feedback').innerText = '';
+}
+
+
+    </script>
+</body>
+
+</html>

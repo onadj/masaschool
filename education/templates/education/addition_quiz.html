@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masa’s Mega Addition Quiz</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('images/cat.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #ff5733;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .form-label,
+        #feedback,
+        #timer,
+        #taskNumber,
+        #bravoMessage,
+        #wrongAnswersList,
+        #instructions {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .btn {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #ff5733;
+            border-color: #ff5733;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card p-4">
+            <h1 class="text-center">Masa’s Mega Addition Quiz!</h1>
+            <!-- Instructions for the quiz -->
+            <div class="mb-4" id="instructions">
+                <h3>Simple Steps to Add Decimal Numbers:</h3>
+                <ol>
+                    <li><strong>Add the whole numbers:</strong> Write the sum in the box below.</li>
+                    <li><strong>Add the first decimal digits:</strong> If the sum is 10 or more, write "1" in the carry box.</li>
+                    <li><strong>Add the second decimal digits:</strong> If the sum is 10 or more, write "1" in the carry box again.</li>
+                    <li>Combine everything to find the answer!</li>
+                </ol>
+                <p><strong>Example:</strong> For 3.87 + 2.52 + 1.31:</p>
+                <ul>
+                    <li>Whole numbers: 3 + 2 + 1 = 6</li>
+                    <li>First decimal digits: 8 + 5 + 3 = 16 (write 6, carry 1)</li>
+                    <li>Second decimal digits: 7 + 2 + 1 = 10 (write 0, carry 1)</li>
+                    <li>Answer: 7.70</li>
+                </ul>
+            </div>
+            <!-- Range of numbers selection -->
+            <div class="mb-3">
+                <label for="range" class="form-label">Enter the biggest number to add by: </label>
+                <input type="number" id="range" min="1" max="100" value="20" class="form-control">
+            </div>
+            <!-- Number of tasks selection -->
+            <div class="mb-3">
+                <label for="taskCount" class="form-label">How many tasks do you want to solve:</label>
+                <input type="number" id="taskCount" min="1" max="100" value="10" class="form-control">
+            </div>
+            <button id="startBtn" class="btn btn-primary w-100 mb-4">Ready? Start the quiz!</button>
+            <div id="quizSection" style="display: none;">
+                <p id="taskNumber" class="h5 mb-3"></p>
+                <p id="question" class="h4 text-center"></p>
+                
+                <!-- Clearer input fields for each sum -->
+                <label for="wholeSum" class="form-label">Whole Number Sum:</label>
+                <input type="number" id="wholeSum" class="form-control mb-2" placeholder="Whole number sum" required>
+                
+                <label for="firstDecimalSum" class="form-label">First Decimal Sum:</label>
+                <input type="number" id="firstDecimalSum" class="form-control mb-2" placeholder="First decimal sum" required>
+                <input type="number" id="firstCarry" class="form-control mb-2" placeholder="First carry (if any)">
+                
+                <label for="secondDecimalSum" class="form-label">Second Decimal Sum:</label>
+                <input type="number" id="secondDecimalSum" class="form-control mb-2" placeholder="Second decimal sum" required>
+                <input type="number" id="secondCarry" class="form-control mb-2" placeholder="Second carry (if any)">
+                
+                <label for="finalAnswer" class="form-label">Final Answer:</label>
+                <input type="number" id="finalAnswer" class="form-control mb-3" placeholder="Final answer" step="0.01" required>
+                
+                <button id="submitBtn" class="btn btn-success w-100 mb-3">Submit</button>
+                <p id="feedback" class="text-center fw-bold"></p>
+                <p id="timer" class="text-center text-danger">Time left: <span id="timeLeft">300</span> seconds</p>
+            </div>
+            <div id="resultsSection" style="display: none;">
+                <h2 class="text-center">Results</h2>
+                <p class="text-center">Correct answer percentage: <span id="correctPercentage"></span>%</p>
+                <p class="text-center">Total time: <span id="totalTime"></span></p>
+                <h3 class="text-center mt-3">Wrong Answers:</h3>
+                <ul id="wrongAnswersList" class="list-group mb-3"></ul>
+                <p id="bravoMessage" class="text-center" style="display: none;">BRAVOOOO MASA!!!! DAD IS PROUD OF YOU!!!!!</p>
+                <button id="startOverBtn" class="btn btn-warning w-100">Start over</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentTask = 0;
+        let correctAnswers = 0;
+        let totalTime = 0;
+        let wrongAnswers = [];
+        let timer;
+
+        document.getElementById('startBtn').addEventListener('click', startQuiz);
+        document.getElementById('submitBtn').addEventListener('click', checkAnswer);
+        document.getElementById('finalAnswer').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        document.getElementById('startOverBtn').addEventListener('click', startOver);
+
+        function startQuiz() {
+            currentTask = 0;
+            correctAnswers = 0;
+            totalTime = 0;
+            wrongAnswers = [];
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('feedback').innerText = '';
+            document.getElementById('taskCount').disabled = true;
+            document.getElementById('range').disabled = true;
+            generateTask();
+            startTimer();
+        }
+
+        function generateTask() {
+            const max = parseFloat(document.getElementById('range').value);
+            const num1 = parseFloat((Math.random() * max).toFixed(2));
+            const num2 = parseFloat((Math.random() * max).toFixed(2));
+            const num3 = Math.random() < 0.5 ? parseFloat((Math.random() * max).toFixed(2)) : null;
+            const taskText = num3 !== null ? `${num1} + ${num2} + ${num3} = ?` : `${num1} + ${num2} = ?`;
+            document.getElementById('question').innerText = taskText;
+            document.getElementById('taskNumber').innerText = `Task ${currentTask + 1}`;
+        }
+
+        function checkAnswer() {
+            const answer = parseFloat(document.getElementById('finalAnswer').value);
+            const numbers = document.getElementById('question').innerText.match(/[\d\.]+/g).map(Number);
+            const correctAnswer = numbers.reduce((acc, curr) => acc + curr, 0);
+
+            if (answer === correctAnswer) {
+                correctAnswers++;
+                document.getElementById('feedback').innerText = 'Correct!';
+            } else {
+                wrongAnswers.push(`${numbers.join(' + ')} = ${correctAnswer.toFixed(2)}`);
+                document.getElementById('feedback').innerText = `Wrong! The correct answer is ${correctAnswer.toFixed(2)}`;
+            }
+
+            currentTask++;
+            if (currentTask < parseInt(document.getElementById('taskCount').value)) {
+                generateTask();
+            } else {
+                endQuiz();
+            }
+            document.getElementById('finalAnswer').value = '';
+            document.getElementById('wholeSum').value = '';
+            document.getElementById('firstDecimalSum').value = '';
+            document.getElementById('secondDecimalSum').value = '';
+            document.getElementById('firstCarry').value = '';
+            document.getElementById('secondCarry').value = '';
+        }
+
+        function startTimer() {
+            let timeLeft = 300; // 5 minutes
+            document.getElementById('timeLeft').innerText = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timeLeft').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+            const percentage = (correctAnswers / parseInt(document.getElementById('taskCount').value)) * 100;
+            document.getElementById('correctPercentage').innerText = percentage.toFixed(2);
+            document.getElementById('totalTime').innerText = `${totalTime} seconds`;
+
+            const wrongAnswersList = document.getElementById('wrongAnswersList');
+            wrongAnswersList.innerHTML = '';
+            wrongAnswers.forEach((wrongAnswer) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerText = wrongAnswer;
+                wrongAnswersList.appendChild(li);
+            });
+
+            if (percentage === 100) {
+                document.getElementById('bravoMessage').style.display = 'block';
+            } else {
+                document.getElementById('bravoMessage').style.display = 'none';
+            }
+        }
+
+        function startOver() {
+            document.getElementById('taskCount').disabled = false;
+            document.getElementById('range').disabled = false;
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
