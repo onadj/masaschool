@@ -158,3 +158,6 @@ def division_quiz(request):
 
 def multiplication_quiz_view(request):
     return render(request, 'education/multiplication_quiz.html')
+
+def irish_quiz(request):
+    return render(request, 'education/irish_quiz.html')

@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']  
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://8000-onadj-masaschool-13i41rvn9gl.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-onxtm857l7l.ws-eu116.gitpod.io',
     'http://8000-onadj-masaschool-cwp67omjwa0.ws-eu116.gitpod.io',  # Za HTTP
     'https://localhost:8000',  # Ako testirate lokalno
     'http://localhost:8000',  # Ako testirate lokalno
@@ -37,7 +37,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 CORS_ALLOWED_ORIGINS = [
-    'https://8000-onadj-masaschool-13i41rvn9gl.ws-eu116.gitpod.io',
+    'https://8000-onadj-masaschool-onxtm857l7l.ws-eu116.gitpod.io',
     'http://8000-onadj-masaschool-cwp67omjwa0.ws-eu116.gitpod.io',  # Za HTTP
     'https://localhost:8000',  # Ako testirate lokalno
     'http://localhost:8000',  # Ako testirate lokalno
